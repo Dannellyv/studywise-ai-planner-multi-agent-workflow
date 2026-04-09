@@ -79,6 +79,7 @@ Preserve the agent labels (📅, 🧠, 📝, 📊, ⚙️) so the student knows 
 // ─────────────────────────────────────────────
 
 async function callClaude(systemPrompt, messages, userText, syllabus = null, syllabusName = "") {
+  console.log("API KEY:", import.meta.env.VITE_ANTHROPIC_API_KEY);
   const userContent = syllabus
     ? [
         { type: "document", source: { type: "base64", media_type: "application/pdf", data: syllabus } },
@@ -93,7 +94,12 @@ async function callClaude(systemPrompt, messages, userText, syllabus = null, syl
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers:  { 
+  "Content-Type": "application/json",
+  "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY,
+  "anthropic-version": "2023-06-01",
+  "anthropic-dangerous-direct-browser-access": "true",
+},
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
